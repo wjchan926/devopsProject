@@ -1,5 +1,5 @@
 gitlab:
-  image: "wjchan/gitlab_img:initial"
+  image: "wjchan/gitlab_img:latest"
   container_name: 'gitlab'
   restart: always
   hostname: "gitlab.example.com"
