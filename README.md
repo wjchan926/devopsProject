@@ -3,6 +3,18 @@
 
 **Source Code Repo:** https://github.com/wjchan926/devopsProject
 
+### Prerequisites:
+---
+Set up the volumes location
+Before setting everything else, configure a new environment variable `$GITLAB_HOME` pointing to the directory where the configuration, logs, and data files will reside. Ensure that the directory exists and appropriate permission have been granted.
+
+For Linux users, set the path to `/srv/gitlab`:
+
+
+`export GITLAB_HOME=/srv/gitlab`
+
+In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the environment variable every session.
+
 ### Running Containers
 ---
 
