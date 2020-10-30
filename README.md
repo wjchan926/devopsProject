@@ -51,7 +51,7 @@ In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the envir
 * Pull files from github repo
 * Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
 * This container spins up much faster than GitLab
-* Visit `localhost:19000` in a browser
+* Visit `localhost:9000` in a browser
 
 </br>
 </br>
