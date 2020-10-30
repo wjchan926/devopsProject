@@ -3,35 +3,37 @@
 
 **Source Code Repo:** https://github.com/wjchan926/devopsProject
 
-### Prerequisites:
----
-Set up the volumes location
-Before setting everything else, configure a new environment variable `$GITLAB_HOME` pointing to the directory where the configuration, logs, and data files will reside. Ensure that the directory exists and appropriate permission have been granted.
+</br>
 
-For Linux users, set the path to `/srv/gitlab`:
+# Running Containers
 
-
-`export GITLAB_HOME=/srv/gitlab`
-
-In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the environment variable every session.
-
-### Running Containers
----
-
-### Getting Updated Images:
+## Getting Updated Images:
 * Running `docker-compose pull` will pull all the latest images required from Docker Repos.
 * Running this before starting the docker containers is good practice if you want the most updated changes
 
-### Making Changes to Docker Images:
+## Making Changes to Docker Images:
 * If you want your changes made in the docker images to persist for everyone, you need to tag the image and push it to the repo
 * `docker tag <image id> wjchan/<image name>:<tag>`
 * `docker push wjchan/<image name>`
 * Everyone will have to `docker-compose pull` to get the updated changes
 
-### GitLab:
+</br>
+</br>
+
+# GitLab:
 **Docker Repo:** https://hub.docker.com/repository/docker/wjchan/gitlab_img
 
-#### Using the GitLab Image:
+## GitLab Prerequisites:
+Set up the volumes location
+Before setting everything else, configure a new environment variable `$GITLAB_HOME` pointing to the directory where the configuration, logs, and data files will reside. Ensure that the directory exists and appropriate permission have been granted.
+
+For Linux users, set the path to `/srv/gitlab`:
+
+`export GITLAB_HOME=/srv/gitlab`
+
+In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the environment variable every session.
+
+## Using the GitLab Image:
 * Pull files from github repo
 * Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
 * Wait a few mins for the container to spin up
@@ -39,8 +41,26 @@ In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the envir
 * Container is ready when the status say `healthy`
 * Visit `localhost:8924` in a browser
 
-### Sonarqube
-**Docker Repo:**
+</br>
+</br>
 
-#### Using the Sonarqube Image:
+# Sonarqube
+**Docker Repo:** https://hub.docker.com/repository/docker/wjchan/sonarqube_img
 
+## Using the Sonarqube Image:
+* Pull files from github repo
+* Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
+* This container spins up much faster than GitLab
+* Visit `localhost:19000` in a browser
+
+</br>
+</br>
+
+# Network
+The docker network that links the two containers is called `devopsNet`.
+
+You can test a connection with `docker-compose exec sonarqube /bin/sh`.
+
+Then once in the containers shell `ping gitlab`.
+
+If the network is up, you should be getting package notifications in the shell.
