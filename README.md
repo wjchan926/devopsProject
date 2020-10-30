@@ -5,7 +5,7 @@
 
 </br>
 
-# Running Containers
+# Containers
 
 ## Getting Updated Images:
 * Running `docker-compose pull` will pull all the latest images required from Docker Repos.
@@ -16,6 +16,11 @@
 * `docker tag <image id> wjchan/<image name>:<tag>`
 * `docker push wjchan/<image name>`
 * Everyone will have to `docker-compose pull` to get the updated changes
+
+## Starting and Stopping Containers:
+Run the entire suite of docker containers using `docker-compose up -d` in the same dir as the `docker-compose.yml` file.
+
+Stop all containers with `docker-compose down`.
 
 </br>
 </br>
