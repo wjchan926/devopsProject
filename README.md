@@ -6,6 +6,10 @@
 ### Running Containers
 ---
 
+### Getting Updated Images:
+* Running `docker-compose pull` will pull all the latest images required from Docker Repos.
+* Running this before starting the docker containers is good practice if you want the most updated changes
+
 ### GitLab:
 **Docker Repo:** https://hub.docker.com/repository/docker/wjchan/gitlab_img
 
