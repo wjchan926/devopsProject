@@ -1,22 +1,38 @@
-version: "3.6"
+version: "3.7"
 services:
   gitlab:
     image: "wjchan/gitlab_img:latest"
     container_name: "gitlab"
     restart: always
-    hostname: "gitlab.devopsteam1.com"
+    hostname: "gitlab.devopsteam1:8924"
+    expose:
+      - "8924"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.devopsteam1.com:8924'
+        external_url "http://localhost:8924"
     ports:
       - "8924:8924"
-      - "443:443"
       - "22:22"
     volumes:
       - "$GITLAB_HOME/config:/etc/gitlab"
       - "$GITLAB_HOME/logs:/var/log/gitlab"
       - "$GITLAB_HOME/data:/var/opt/gitlab"
-    networks: 
+    networks:
+      - devopsNet
+
+  gitlab-runner:
+    image: "gitlab/gitlab-runner:latest"
+    container_name: "gitlab-runner"
+    restart: always
+    links:
+      - gitlab
+    volumes:
+      - "/srv/gitlab-runner/config:/etc/gitlab-runner"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - CI_SERVER_URL=http://gitlab:8924/
+      - REGISTRATION_TOKEN=xfhiJ32Xy6z_kb91rFxE
+    networks:
       - devopsNet
 
   sonarqube:
@@ -27,8 +43,8 @@ services:
     ports:
       - "9092:9092"
       - "9000:9000"
-    networks: 
-        - devopsNet
+    networks:
+      - devopsNet
 
 networks:
   devopsNet: {}
