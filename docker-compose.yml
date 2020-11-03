@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   gitlab:
-    image: "wjchan/gitlab_img:latest"
+    image: "gitlab/gitlab-ee:latest"
     container_name: "gitlab"
     restart: always
     hostname: "gitlab.devopsteam1:8924"
@@ -41,7 +41,7 @@ services:
       - devopsNet
 
   sonarqube:
-    image: "wjchan/sonarqube_img:latest"
+    image: "sonarqube:latest"
     container_name: "sonarqube"
     restart: always
     hostname: "sonarqube.devopsteam1"
