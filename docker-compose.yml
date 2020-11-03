@@ -12,7 +12,6 @@ services:
         external_url "http://localhost:8924"
     ports:
       - "8924:8924"
-      - "22:22"
     volumes:
       - "$GITLAB_HOME/config:/etc/gitlab"
       - "$GITLAB_HOME/logs:/var/log/gitlab"
@@ -31,7 +30,13 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
       - CI_SERVER_URL=http://gitlab:8924/
-      - REGISTRATION_TOKEN=xfhiJ32Xy6z_kb91rFxE
+      - DOCKER_NETWORK_MODE=host
+      - RUNNER_NAME=runner
+      - RUNNER_TAG_LIST="latest"
+      - DOCKER_PRIVILEGED=true
+      - RUNNER_EXECUTOR=docker
+      - DOCKER_IMAGE="alpine:latest"
+      - DOCKER_LINKGS="gitlab.devopsteam1:8924"
     networks:
       - devopsNet
 
