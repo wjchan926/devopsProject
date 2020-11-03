@@ -15,8 +15,9 @@
 
 ### Container Setup:
 1. Git Clone this project to local repo
-2. Run `docker-compose up -d` in repo root
-3. Wait for all containers to spin up, usually takes a few minutes
+2. Add `export GITLAB_HOME="/srv/gitlab"` to your `~/.bashrc` file. Save and run `source ~./bashrc`. 
+    * This env variable must be set in Linux for hosted GitLab to work
+3. Run `docker-compose up -d` in repo root. Wait for all containers to spin up, usually takes a few minutes
 
 ### GitLab Setup:
 4. Go to the GitLab container by visitng http://localhost:8924 in a browser
@@ -57,8 +58,8 @@
 
 ### Testing:
 1. Make a change to the `juice-shop` repo in GitLab.
-2. A job should automatically start running
-3. You can click on the pie-like icon to see the status
+2. A job should automatically start running (the scanner)
+3. You can click on the pie-like icon to see the status. It should take a few mins to run.
 4. Confirm that the job has completed successfully.
 5. Visit http://localhost:9000
 6. Go to `Projects`
@@ -90,7 +91,8 @@ Stop all containers with `docker-compose down`.
 **Docker Repo:** https://hub.docker.com/repository/docker/wjchan/gitlab_img
 
 ## GitLab Prerequisites:
-Set up the volumes location
+Set up the volumes location:
+
 Before setting everything else, configure a new environment variable `$GITLAB_HOME` pointing to the directory where the configuration, logs, and data files will reside. Ensure that the directory exists and appropriate permission have been granted.
 
 For Linux users, set the path to `/srv/gitlab`:
@@ -105,7 +107,7 @@ In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the envir
 * Wait a few mins for the container to spin up
 * Use `docker ps` to check the container status
 * Container is ready when the status say `healthy`
-* Visit `localhost:8924` in a browser
+* Visit http://localhost:8924 in a browser
 
 </br>
 </br>
@@ -117,7 +119,7 @@ In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the envir
 * Pull files from github repo
 * Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
 * This container spins up much faster than GitLab
-* Visit `localhost:9000` in a browser
+* Visit http://localhost:9000 in a browser
 
 ## **Important**
 These variable must be set in hosted GitLab
@@ -145,6 +147,9 @@ If the network is up, you should be getting package notifications in the shell.
 ## **Important** Using the GitLab-Runner Image:
 
 The GitLab-Runner image has to be registered. See [Multi Container Setup](#multi-container-setup) for instructions.
+
+<br>
+<br>
 
 # Files:
 ### .gitlab-ci.yml
