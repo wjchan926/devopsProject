@@ -5,17 +5,23 @@ services:
     container_name: "gitlab"
     restart: always
     hostname: "gitlab.devopsteam1:8924"
-    expose:
-      - "8924"
+    volumes:
+      - "/srv/gitlab/config:/etc/gitlab"
+      - "/srv/gitlab/logs:/var/log/gitlab"
+      - "/srv/gitlab/data:/var/opt/gitlab"
+    ports:
+      - "2222:22"
+      - "8080:80"
+      - "443:443"
+      - "8924:8924"
+      - "5555:5555"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url "http://localhost:8924"
-    ports:
-      - "8924:8924"
-    volumes:
-      - "$GITLAB_HOME/config:/etc/gitlab"
-      - "$GITLAB_HOME/logs:/var/log/gitlab"
-      - "$GITLAB_HOME/data:/var/opt/gitlab"
+        external_url 'http://localhost:8924'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        registry_external_url 'http://localhost:5555'
+        registry['enable'] = true
+        unicorn['socket'] = '/opt/gitlab/var/unicorn/gitlab.socket'
     networks:
       - devopsNet
 
@@ -36,7 +42,7 @@ services:
       - DOCKER_PRIVILEGED=true
       - RUNNER_EXECUTOR=docker
       - DOCKER_IMAGE="alpine:latest"
-      - DOCKER_LINKGS="gitlab.devopsteam1:8924"
+      - DOCKER_LINKS="gitlab.devopsteam1:8924"
     networks:
       - devopsNet
 
@@ -48,6 +54,21 @@ services:
     ports:
       - "9092:9092"
       - "9000:9000"
+    networks:
+      - devopsNet
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
+    ports:
+      - 8083:8080
+      - 50003:50000
+    container_name: jenkins
+    restart: always
+    volumes:
+      - /srv/jenkins/jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - devopsNet
 

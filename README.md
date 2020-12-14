@@ -13,6 +13,8 @@
 
 </br>
 
+# Part 2:
+
 # Multi Container Setup
 
 ### Container Setup:
@@ -73,101 +75,7 @@
 6. Go to `Projects`
 7. Confirm the pretty statistics in the `juice-shop` project in SonarQube
 
----
-
 </br>
-</br>
-
-# Containers
-
-## Making Changes to Docker Images:
-
-- If you want your changes made in the docker images to persist for everyone, you need to tag the image and push it to the repo
-- `docker tag <image id> wjchan/<image name>:<tag>`
-- `docker push wjchan/<image name>`
-- Everyone will have to `docker-compose pull` to get the updated changes
-
-## Starting and Stopping Containers:
-
-Run the entire suite of docker containers using `docker-compose up -d` in the same dir as the `docker-compose.yml` file.
-
-Stop all containers with `docker-compose down`.
-
-</br>
-</br>
-
-# GitLab:
-
-**Docker Repo:** https://hub.docker.com/repository/docker/wjchan/gitlab_img
-
-## GitLab Prerequisites:
-
-Set up the volumes location:
-
-Before setting everything else, configure a new environment variable `$GITLAB_HOME` pointing to the directory where the configuration, logs, and data files will reside. Ensure that the directory exists and appropriate permission have been granted.
-
-For Linux users, set the path to `/srv/gitlab`:
-
-`export GITLAB_HOME=/srv/gitlab`
-
-In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the environment variable every session.
-
-## Using the GitLab Image:
-
-- Pull files from github repo
-- Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
-- Wait a few mins for the container to spin up
-- Use `docker ps` to check the container status
-- Container is ready when the status say `healthy`
-- Visit http://localhost:8924 in a browser
-
-</br>
-</br>
-
-# Sonarqube
-
-**Docker Repo:** https://hub.docker.com/repository/docker/wjchan/sonarqube_img
-
-## Using the Sonarqube Image:
-
-- Pull files from github repo
-- Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
-- This container spins up much faster than GitLab
-- Visit http://localhost:9000 in a browser
-
-## **Important**
-
-These variable must be set in hosted GitLab
-
-- `SONAR_HOST_URL=http://localhost:9000`
-- `SONAR_TOKEN` - See [Multi Container Setup](#multi-container-setup) for instructions
-
-</br>
-</br>
-
-# Network
-
-The docker network that links the two containers is called `devopsNet`.
-
-You can test a connection with `docker-compose exec sonarqube /bin/sh`.
-
-Then once in the containers shell `ping gitlab`.
-
-If the network is up, you should be getting package notifications in the shell.
-
-</br>
-</br>
-
-# GitLab Runner:
-
-**Docker Repo:** https://hub.docker.com/repository/docker/gitlab/gitlab-runner"
-
-## **Important** Using the GitLab-Runner Image:
-
-The GitLab-Runner image has to be registered. See [Multi Container Setup](#multi-container-setup) for instructions.
-
-<br>
-<br>
 
 # Files:
 
@@ -202,3 +110,154 @@ sonar.projectName=juice-shop
 sonar.login=admin
 sonar.password=admin
 ```
+
+</br>
+</br>
+
+# Part 3
+
+## Container Setups:
+
+## Jenkins
+
+Configure the Jenkins web server in accordance with their online docs for Jenkins in docker. https://www.jenkins.io/doc/book/installing/docker/
+
+### Plugins to install
+
+- Gitlab
+- Snyk
+- Build Pipeline
+- Nodejs
+
+## NodeJS Plugin Setup
+
+- In the Global configurations select NodeJS 14.15.1 as the node version
+- Make sure automatic installation is selected
+
+### Integrations
+
+### Gitlab <---> Jenkins
+
+Follow the instruction on the following website to finish integration between gitlab and jenkins:
+https://hackernoon.com/setting-up-gitlab-jenkins-ci-with-docker-da74c67373ac
+
+### Snyk <---> Jenkins
+
+Next install snyk CLI on your machine: https://snyk.io/docs/cli-installation/
+Go to snyk website https://app.snyk.io/account, login in with your account, in order to obtain your snyk API Token.
+
+Then head over to Jenkins web server, Go to manage Jenkins -> configure system, look for "Global Properties" section, check "environment
+variable".
+In the name field, type in "SNYK_TOKEN"
+in the value field, copy and paste the snyk API Token.
+
+---
+
+## Gitlab Container Registry
+
+Set up the Container registry in accordance with https://docs.gitlab.com/ee/administration/packages/container_registry.html
+
+---
+
+## Pushing Images to Gitlab Container Registry
+
+Command used to installed Juice-Shop docker image and to push the docker image to gitlab container registry:
+
+`docker pull bkimminich/juice-shop`
+
+`docker login localhost:5555`
+
+`docker image tag bkimminich/juice-shop:latest localhost:5555/root/juice-shop`
+
+`docker image push localhost:5555/root/juice-shop`
+
+---
+
+</br>
+</br>
+
+# Container Descriptions
+
+## Starting and Stopping Containers:
+
+Run the entire suite of docker containers using `docker-compose up -d` in the same dir as the `docker-compose.yml` file.
+
+Stop all containers with `docker-compose down`.
+
+</br>
+</br>
+
+# GitLab:
+
+## GitLab Prerequisites:
+
+Set up the volumes location:
+
+Before setting everything else, configure a new environment variable `$GITLAB_HOME` pointing to the directory where the configuration, logs, and data files will reside. Ensure that the directory exists and appropriate permission have been granted.
+
+For Linux users, set the path to `/srv/gitlab`:
+
+`export GITLAB_HOME=/srv/gitlab`
+
+In Ubuntu, you can add this to `$HOME/.bashrc` so you dont have to set the environment variable every session.
+
+## Using the GitLab Image:
+
+- Pull files from github repo
+- Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
+- Wait a few mins for the container to spin up
+- Use `docker ps` to check the container status
+- Container is ready when the status say `healthy`
+- Visit http://localhost:8924 in a browser
+
+</br>
+</br>
+
+# Sonarqube
+
+## Using the Sonarqube Image:
+
+- Pull files from github repo
+- Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
+- This container spins up much faster than GitLab
+- Visit http://localhost:9000 in a browser
+
+## **Important**
+
+These variable must be set in hosted GitLab
+
+- `SONAR_HOST_URL=http://localhost:9000`
+- `SONAR_TOKEN` - See [Multi Container Setup](#multi-container-setup) for instructions
+
+# Jenkins
+
+## Using the Jenkins Image
+
+- Pull files from github repo
+- Run `docker-compose up -d` in the same dir as the `docker-compose.yml` file
+- Visit http://localhost:8083 in a browser
+
+</br>
+</br>
+
+# Network
+
+The docker network that links the two containers is called `devopsNet`.
+
+You can test a connection with `docker-compose exec sonarqube /bin/sh`.
+
+Then once in the containers shell `ping gitlab`.
+
+If the network is up, you should be getting package notifications in the shell.
+
+</br>
+</br>
+
+# GitLab Runner:
+
+## **Important** Using the GitLab-Runner Image:
+
+The GitLab-Runner image has to be registered. See [Multi Container Setup](#multi-container-setup) for instructions.
+
+<br>
+<br>
